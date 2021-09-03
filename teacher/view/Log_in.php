@@ -3,11 +3,13 @@
        session_start();
        include "database.php";
         $error = '';
+        $erroruser = '';
        if(isset($_POST['submit'])){
         $username=$_POST['username'];
         $password=$_POST['password'];
         
     $result =mysqli_query($conn,"SELECT * from user where username = '$username' and passwords='$password'");
+    $result123 =mysqli_query($conn,"SELECT * from user where username = '$username'");
         $i =  mysqli_fetch_assoc($result);
     if(mysqli_num_rows($result)>0){
              $_SESSION['username'] = $username;
@@ -16,8 +18,12 @@
              echo '<script type="text/javascript">' .'window.location = "Main_menu.php?id='.$id.'"' . '</script>';
          
         }else{
-        $error ='Incorrect password.';
-   }
+            $error ='Incorrect password.';
+       }
+        
+    if(mysqli_num_rows($result123)<1){
+        $erroruser ='Incorrect username.';
+    }
 }
 ?>
 <!doctype html>
@@ -50,6 +56,7 @@
                 <h1 class="display-4 text-center">Log in</h1>
                 <!------USER INPUT START-->
                     <!----USERNAME-->
+                    <span class="label" ><?=$erroruser?></span>
                 <div class="Username input-group">
                     <span class="input-group-text" ><img src="../img/person-circle.svg"></span>
                     <input type="text" name='username' class="form-control" placeholder="Username" 
@@ -82,18 +89,12 @@
                 <div class = "container ">
                 <div class="row d-flex justify-content-center">
                 <div class="col-sm">
-                <a href="../../user/view/table.php"type="submit" name="add" class="button">
-                            Back
-                            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                </a>
-                </div>
-                <div class="col-sm">
+                
                 <button type="submit" name="submit" class="button">
                             Log in
                             <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
                         </button>
-                        </div>
-                       
+                        </div>     
                 </div>
             </div>
         </form>
